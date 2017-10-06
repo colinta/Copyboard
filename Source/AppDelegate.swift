@@ -26,16 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        sendClipboard()
-    }
-
     func sendClipboard() {
-        let ref = Database.database().reference()
+        let ref = Database.database().reference().child("clipboard/value")
 
         let pasteboardString: String? = UIPasteboard.general.string
         if let clipboard = pasteboardString {
-            ref.child("clipboard").setValue(["value": clipboard])
+            ref.setValue(clipboard, withCompletionBlock: { error, ref in
+                exit(0)
+            })
         }
     }
 
