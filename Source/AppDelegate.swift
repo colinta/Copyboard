@@ -4,6 +4,7 @@
 
 import UIKit
 import Firebase
+import FirebaseDatabase
 
 
 @UIApplicationMain
@@ -12,6 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        FirebaseApp.configure()
+
         let window = UIWindow()
         let appController = UIViewController()
         window.rootViewController = appController
@@ -28,9 +31,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func sendClipboard() {
+        let ref = Database.database().reference()
+
         let pasteboardString: String? = UIPasteboard.general.string
-        if let theString = pasteboardString {
-            print("sending \"\(theString)\" to firebase")
+        if let clipboard = pasteboardString {
+            ref.child("clipboard").setValue(["value": clipboard])
         }
     }
 
